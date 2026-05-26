@@ -977,12 +977,16 @@ function escapeHTML(str) {
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. 初始化資料與統計
-  initData();
-  updateStats();
+  // 1. 綁定密碼驗證事件監聽
+  document.getElementById("auth-submit-btn").addEventListener("click", submitAuth);
+  document.getElementById("auth-password-input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      submitAuth();
+    }
+  });
 
-  // 2. 預設渲染首頁 (物品紀錄頁)
-  renderItems();
+  // 2. 執行驗證檢查
+  checkAuth();
 
   // 3. 導覽列按鈕切換
   document.getElementById("nav-items-btn").addEventListener("click", () => switchPage("items"));
@@ -1100,4 +1104,64 @@ function handleImportBackup(e) {
   };
   reader.readAsText(file);
   e.target.value = ""; // 重設值，允許重複選擇同一個檔案
+}
+
+// ==========================================
+// 12. 密碼驗證邏輯 具體實作
+// ==========================================
+
+const CORRECT_PASSWORD = "DDHOME";
+
+function checkAuth() {
+  const isAuthedLocal = localStorage.getItem("family_auth") === "true";
+  const isAuthedSession = sessionStorage.getItem("family_auth") === "true";
+
+  if (isAuthedLocal || isAuthedSession) {
+    document.getElementById("auth-page").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+    
+    // 初始化資料與統計
+    initData();
+    updateStats();
+    renderItems();
+  } else {
+    document.getElementById("auth-page").style.display = "flex";
+    document.getElementById("main-content").style.display = "none";
+    
+    // 聚焦於密碼輸入框
+    setTimeout(() => {
+      const pwdInput = document.getElementById("auth-password-input");
+      if (pwdInput) pwdInput.focus();
+    }, 100);
+  }
+}
+
+function submitAuth() {
+  const pwdInput = document.getElementById("auth-password-input");
+  const errorMsg = document.getElementById("auth-error-msg");
+  const rememberMe = document.getElementById("auth-remember-me");
+  
+  const enteredPwd = pwdInput.value;
+
+  if (enteredPwd === CORRECT_PASSWORD) {
+    errorMsg.innerText = "";
+    
+    if (rememberMe.checked) {
+      localStorage.setItem("family_auth", "true");
+    } else {
+      sessionStorage.setItem("family_auth", "true");
+    }
+    
+    document.getElementById("auth-page").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+    
+    // 初始化資料與統計
+    initData();
+    updateStats();
+    renderItems();
+  } else {
+    errorMsg.innerText = "❌ 密碼錯誤，請重新輸入。";
+    pwdInput.value = "";
+    pwdInput.focus();
+  }
 }

@@ -661,6 +661,69 @@ body {
   border-color: var(--text-secondary);
 }
 
+/* --- 密碼驗證頁面樣式 --- */
+.auth-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 24px;
+}
+
+.auth-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.auth-title {
+  font-family: var(--font-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.auth-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.auth-error {
+  color: var(--tag-warranty-err-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 8px;
+  text-align: left;
+  min-height: 20px;
+}
+
+.auth-checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
 /* --- Modal 互動視窗樣式 --- */
 .modal {
   position: fixed;

@@ -9,119 +9,145 @@
 </head>
 <body>
 
-  <!-- 頂部導覽列 -->
-  <nav class="navbar" id="site-navbar">
-    <div class="container navbar-container">
-      <a href="#" class="brand" id="brand-logo">
-        <span class="brand-icon">🏠</span>
-        <span>我們的家庭檔案庫</span>
-      </a>
-      <div class="nav-links" id="nav-links-container">
-        <button class="nav-btn active" id="nav-items-btn">📦 物品紀錄</button>
-        <button class="nav-btn" id="nav-timeline-btn">⏳ 重大事件時間軸</button>
-        <button class="nav-btn" id="nav-export-btn" title="將所有家庭紀錄匯出為 JSON 備份檔">📤 匯出備份</button>
-        <button class="nav-btn" id="nav-import-btn" title="將 JSON 備份檔還原回家庭紀錄">📥 匯入備份</button>
-        <input type="file" id="import-file-input" accept=".json" style="display: none;">
+  <!-- 密碼驗證頁面 -->
+  <div id="auth-page" class="auth-container">
+    <div class="auth-card">
+      <div class="auth-icon">🔒</div>
+      <h2 class="auth-title">家庭檔案庫驗證</h2>
+      <p class="auth-subtitle">本網站含有家人隱私紀錄，請輸入存取密碼以繼續。</p>
+      
+      <div class="form-group" style="margin-top: 24px;">
+        <input type="password" id="auth-password-input" class="form-input" placeholder="請輸入存取密碼..." autofocus>
+        <div id="auth-error-msg" class="auth-error"></div>
       </div>
+      
+      <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+        <label class="auth-checkbox-label">
+          <input type="checkbox" id="auth-remember-me">
+          <span style="font-size: 0.85rem; color: var(--text-secondary); margin-left: 6px;">在此裝置保持登入</span>
+        </label>
+      </div>
+      
+      <button class="btn btn-primary" id="auth-submit-btn" style="width: 100%; padding: 10px 0; font-weight: 600;">驗證並進入</button>
     </div>
-  </nav>
+  </div>
 
-  <main class="container">
-    
-    <!-- 頂部全域統計面板 -->
-    <section class="stats-section" id="global-stats-section">
-      <div class="stats-grid" id="stats-container">
-        <!-- 物品總數 -->
-        <div class="stat-card" id="stat-card-total-items">
-          <div class="stat-label">物品總數</div>
-          <div class="stat-value" id="stat-total-items">0</div>
-        </div>
-        <!-- 本月新增物品 -->
-        <div class="stat-card" id="stat-card-month-items">
-          <div class="stat-label">本月新增物品</div>
-          <div class="stat-value" id="stat-month-items">0</div>
-        </div>
-        <!-- 即將保固到期數 -->
-        <div class="stat-card" id="stat-card-warranty-alert">
-          <div class="stat-label">即將保固到期</div>
-          <div class="stat-value" id="stat-warranty-alert" style="color: var(--tag-warranty-warn-text);">0</div>
-        </div>
-        <!-- 已關聯事件的物品數 -->
-        <div class="stat-card" id="stat-card-related-items">
-          <div class="stat-label">已關聯事件物品</div>
-          <div class="stat-value" id="stat-related-items">0</div>
-        </div>
-        <!-- 今年重大事件數 -->
-        <div class="stat-card" id="stat-card-year-events">
-          <div class="stat-label">今年重大事件</div>
-          <div class="stat-value" id="stat-year-events" style="color: var(--mood-important-text);">0</div>
+  <!-- 主內容容器 (預設隱藏，驗證通過後顯示) -->
+  <div id="main-content" style="display: none;">
+    <!-- 頂部導覽列 -->
+    <nav class="navbar" id="site-navbar">
+      <div class="container navbar-container">
+        <a href="#" class="brand" id="brand-logo">
+          <span class="brand-icon">🏠</span>
+          <span>我們的家庭檔案庫</span>
+        </a>
+        <div class="nav-links" id="nav-links-container">
+          <button class="nav-btn active" id="nav-items-btn">📦 物品紀錄</button>
+          <button class="nav-btn" id="nav-timeline-btn">⏳ 重大事件時間軸</button>
+          <button class="nav-btn" id="nav-export-btn" title="將所有家庭紀錄匯出為 JSON 備份檔">📤 匯出備份</button>
+          <button class="nav-btn" id="nav-import-btn" title="將 JSON 備份檔還原回家庭紀錄">📥 匯入備份</button>
+          <input type="file" id="import-file-input" accept=".json" style="display: none;">
         </div>
       </div>
-    </section>
+    </nav>
 
-    <!-- 一、 家中物品紀錄頁 -->
-    <section class="page-section active" id="items-page">
-      <div class="page-header" id="items-page-header">
-        <h1 class="page-title">家中物品紀錄</h1>
-        <button class="btn btn-primary" id="add-item-btn">➕ 新增物品</button>
-      </div>
-
-      <!-- 物品搜尋篩選工具列 -->
-      <div class="toolbar" id="items-toolbar">
-        <div class="search-wrapper">
-          <input type="text" class="search-input" id="item-search" placeholder="搜尋物品名稱、類別或備註...">
+    <main class="container">
+      
+      <!-- 頂部全域統計面板 -->
+      <section class="stats-section" id="global-stats-section">
+        <div class="stats-grid" id="stats-container">
+          <!-- 物品總數 -->
+          <div class="stat-card" id="stat-card-total-items">
+            <div class="stat-label">物品總數</div>
+            <div class="stat-value" id="stat-total-items">0</div>
+          </div>
+          <!-- 本月新增物品 -->
+          <div class="stat-card" id="stat-card-month-items">
+            <div class="stat-label">本月新增物品</div>
+            <div class="stat-value" id="stat-month-items">0</div>
+          </div>
+          <!-- 即將保固到期數 -->
+          <div class="stat-card" id="stat-card-warranty-alert">
+            <div class="stat-label">即將保固到期</div>
+            <div class="stat-value" id="stat-warranty-alert" style="color: var(--tag-warranty-warn-text);">0</div>
+          </div>
+          <!-- 已關聯事件的物品數 -->
+          <div class="stat-card" id="stat-card-related-items">
+            <div class="stat-label">已關聯事件物品</div>
+            <div class="stat-value" id="stat-related-items">0</div>
+          </div>
+          <!-- 今年重大事件數 -->
+          <div class="stat-card" id="stat-card-year-events">
+            <div class="stat-label">今年重大事件</div>
+            <div class="stat-value" id="stat-year-events" style="color: var(--mood-important-text);">0</div>
+          </div>
         </div>
-        <select class="filter-select" id="item-category-filter">
-          <option value="all">所有類別</option>
-          <option value="家電">家電</option>
-          <option value="家具">家具</option>
-          <option value="廚房">廚房</option>
-          <option value="清潔">清潔</option>
-          <option value="寵物">寵物</option>
-          <option value="其他">其他</option>
-        </select>
-        <select class="filter-select" id="item-sort-select">
-          <option value="desc">購買日期：最新到最舊</option>
-          <option value="asc">購買日期：最舊到最新</option>
-        </select>
-      </div>
+      </section>
 
-      <!-- 物品展示區 -->
-      <div class="items-grid" id="items-grid-container">
-        <!-- 由 JavaScript 動態生成卡片 -->
-      </div>
-    </section>
-
-    <!-- 二、 重大事件時間軸頁 -->
-    <section class="page-section" id="timeline-page">
-      <div class="page-header" id="timeline-page-header">
-        <h1 class="page-title">重大事件時間軸</h1>
-        <button class="btn btn-primary" id="add-event-btn">➕ 新增事件</button>
-      </div>
-
-      <!-- 事件搜尋篩選工具列 -->
-      <div class="toolbar" id="events-toolbar">
-        <div class="search-wrapper">
-          <input type="text" class="search-input" id="event-search" placeholder="搜尋事件標題、說明或類別...">
+      <!-- 一、 家中物品紀錄頁 -->
+      <section class="page-section active" id="items-page">
+        <div class="page-header" id="items-page-header">
+          <h1 class="page-title">家中物品紀錄</h1>
+          <button class="btn btn-primary" id="add-item-btn">➕ 新增物品</button>
         </div>
-        <select class="filter-select" id="event-category-filter">
-          <option value="all">所有事件類別</option>
-          <option value="搬家">搬家</option>
-          <option value="裝修">裝修</option>
-          <option value="家電汰換">家電汰換</option>
-          <option value="家庭活動">家庭活動</option>
-          <option value="維修">維修</option>
-          <option value="其他">其他</option>
-        </select>
-      </div>
 
-      <!-- 時間軸展示區 -->
-      <div class="timeline-container" id="timeline-container-el">
-        <!-- 由 JavaScript 按年份分組動態生成 -->
-      </div>
-    </section>
+        <!-- 物品搜尋篩選工具列 -->
+        <div class="toolbar" id="items-toolbar">
+          <div class="search-wrapper">
+            <input type="text" class="search-input" id="item-search" placeholder="搜尋物品名稱、類別或備註...">
+          </div>
+          <select class="filter-select" id="item-category-filter">
+            <option value="all">所有類別</option>
+            <option value="家電">家電</option>
+            <option value="家具">家具</option>
+            <option value="廚房">廚房</option>
+            <option value="清潔">清潔</option>
+            <option value="寵物">寵物</option>
+            <option value="其他">其他</option>
+          </select>
+          <select class="filter-select" id="item-sort-select">
+            <option value="desc">購買日期：最新到最舊</option>
+            <option value="asc">購買日期：最舊到最新</option>
+          </select>
+        </div>
 
-  </main>
+        <!-- 物品展示區 -->
+        <div class="items-grid" id="items-grid-container">
+          <!-- 由 JavaScript 動態生成卡片 -->
+        </div>
+      </section>
+
+      <!-- 二、 重大事件時間軸頁 -->
+      <section class="page-section" id="timeline-page">
+        <div class="page-header" id="timeline-page-header">
+          <h1 class="page-title">重大事件時間軸</h1>
+          <button class="btn btn-primary" id="add-event-btn">➕ 新增事件</button>
+        </div>
+
+        <!-- 事件搜尋篩選工具列 -->
+        <div class="toolbar" id="events-toolbar">
+          <div class="search-wrapper">
+            <input type="text" class="search-input" id="event-search" placeholder="搜尋事件標題、說明或類別...">
+          </div>
+          <select class="filter-select" id="event-category-filter">
+            <option value="all">所有事件類別</option>
+            <option value="搬家">搬家</option>
+            <option value="裝修">裝修</option>
+            <option value="家電汰換">家電汰換</option>
+            <option value="家庭活動">家庭活動</option>
+            <option value="維修">維修</option>
+            <option value="其他">其他</option>
+          </select>
+        </div>
+
+        <!-- 時間軸展示區 -->
+        <div class="timeline-container" id="timeline-container-el">
+          <!-- 由 JavaScript 按年份分組動態生成 -->
+        </div>
+      </section>
+
+    </main>
+  </div>
 
   <!-- ========================================== -->
   <!-- MODAL 1: 新增 / 編輯物品彈出視窗 -->
